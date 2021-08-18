@@ -135,8 +135,9 @@ USBMUXD_API int usbmuxd_subscribe(usbmuxd_event_cb_t callback, void *user_data)
 
 USBMUXD_API int usbmuxd_unsubscribe(void)
 {
+    //DEBUG_PRINT("unimpl"); abort();
     DEBUG_PRINT("usbmuxd_unsubscribe ignored");
-    abort();
+    return 0;
 }
 
 USBMUXD_API int usbmuxd_connect(const uint32_t handle, const unsigned short port)

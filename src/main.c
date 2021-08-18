@@ -48,8 +48,10 @@ char upnpExternalAddr[40] = { 0 };
 int initUPnP() {
 	int error = 0;
     char lanaddr[64] = "unset";
-    struct UPNPDev *devlist = upnpDiscover(2000, NULL, "", 0, 0, 2, &error);
-    int upnpRet = UPNP_GetValidIGD(devlist, &_upnpUrls, &_upnpData, lanaddr, sizeof(lanaddr));
+    int upnpRet = 0;
+    //struct UPNPDev *devlist = upnpDiscover(2000, NULL, "", 0, 0, 2, &error);
+    //upnpRet = UPNP_GetValidIGD(devlist, &_upnpUrls, &_upnpData, lanaddr, sizeof(lanaddr));
+    upnpRet = 1; UPNP_GetIGDFromUrl("http://192.168.1.1:1900/igd.xml", &_upnpUrls, &_upnpData, lanaddr, sizeof(lanaddr));
     upnpUrls = &_upnpUrls;
     upnpData = &_upnpData;
     if (upnpRet == 1) {
@@ -72,10 +74,15 @@ int initUPnP() {
         return 0;
     }
     DEBUG_PRINT("Got ExternalIPAddress = %s\n", externalIPAddress);
+    strcpy(upnpExternalAddr, externalIPAddress);
     return 1;
 }
 
 int main(int argc, char *argv[]) {
+    setvbuf(stdin, NULL, _IONBF, 0); 
+    setvbuf(stdout, NULL, _IONBF, 0); 
+    setvbuf(stderr, NULL, _IONBF, 0); 
+
     srand(time(NULL));
     DEBUG_PRINT("Setup pairInfo...");
     strcpy(pairUDID, argv[1]);
@@ -92,6 +99,7 @@ int main(int argc, char *argv[]) {
     }
     DEBUG_PRINT("upnp init successfully!");
     
+    idevice_set_debug_level(1);
     DEBUG_PRINT("Connect device...");
     idevice_error_t derr = IDEVICE_E_SUCCESS;
     lockdownd_error_t lerr = LOCKDOWN_E_SUCCESS;
@@ -104,11 +112,11 @@ int main(int argc, char *argv[]) {
     heartbeat_client_t hbclient;
     heartbeat_error_t err = HEARTBEAT_E_UNKNOWN_ERROR;
     err = heartbeat_client_start_service(g_device, &hbclient, TOOL_NAME);
-    
+    idevice_set_debug_level(0);
+
     pthread_t thHeartbeat;
     pthread_create(&thHeartbeat, NULL, (void * (*)(void *))heartbeat_thread, hbclient);
 
-    //idevice_set_debug_level(1);
     DEBUG_PRINT("Start tool...");
     tool_main(argc - 3, argv + 3);
 }

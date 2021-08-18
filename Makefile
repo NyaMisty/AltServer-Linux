@@ -14,7 +14,7 @@ src += $(miniupnpc_src)
 
 obj = $(src:.c=.o)
 
-CFLAGS := -DHAVE_CONFIG_H -DDEBUG -O0 -g -DMINIUPNP_DEBUG
+CFLAGS := -DHAVE_CONFIG_H -DDEBUG -O0 -g
 CFLAGS += -Ilibraries -Ilibraries/libimobiledevice/include -Ilibraries/libimobiledevice 
 CFLAGS += -Ilibraries/libplist/src -Ilibraries/libplist/include -Ilibraries/libplist/libcnary/include -Ilibraries/libusbmuxd/include
 CFLAGS += -Ilibraries/miniupnpc
