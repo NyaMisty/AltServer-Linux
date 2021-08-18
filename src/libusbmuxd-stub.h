@@ -2,7 +2,7 @@
 
 char pairUDID[256];
 char pairDeviceAddress[256];
-char pairData[8192];
+char pairData[16384];
 uint32_t pairDataLen;
 
 #define DEBUG_PRINT(...) do { \

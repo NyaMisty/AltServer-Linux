@@ -39,7 +39,7 @@
 
 char pairUDID[256] = { 0 };
 char pairDeviceAddress[256] = { 0 };
-char pairData[8192] = { 0 };
+char pairData[16384] = { 0 };
 uint32_t pairDataLen = 0;
 
 
@@ -48,8 +48,8 @@ uint32_t pairDataLen = 0;
 
 struct sockaddr_in_darwin {
     uint8_t      sin_len;
-    sa_family_t    sin_family;
-    in_port_t      sin_port;
+    uint8_t    sin_family;
+    uint16_t      sin_port;
     struct in_addr sin_addr;
     char           sin_zero[8];
 };
@@ -76,6 +76,7 @@ USBMUXD_API int usbmuxd_get_device_by_udid(const char *udid, usbmuxd_device_info
 
 USBMUXD_API int usbmuxd_get_device(const char *udid, usbmuxd_device_info_t *device, enum usbmux_lookup_options options)
 {
+    options = DEVICE_LOOKUP_NETWORK;
     if ((options & DEVICE_LOOKUP_USBMUX) != 0) {
         DEBUG_PRINT("DEVICE_LOOKUP_USBMUX not supported!");
         return -EINVAL;
@@ -94,8 +95,10 @@ USBMUXD_API int usbmuxd_read_buid(char **buid)
 
 USBMUXD_API int usbmuxd_read_pair_record(const char* record_id, char **record_data, uint32_t *record_size)
 {
-    void *data = pairData;
     size_t len = pairDataLen;
+    void *data = malloc(len);
+    memcpy(data, pairData, len);
+    DEBUG_PRINT("returned pairRecord len: %lu", len);
     *record_data = data;
     *record_size = (uint32_t)len;
     return 0;
@@ -105,81 +108,82 @@ USBMUXD_API int usbmuxd_read_pair_record(const char* record_id, char **record_da
 
 USBMUXD_API int usbmuxd_events_subscribe(usbmuxd_subscription_context_t *context, usbmuxd_event_cb_t callback, void *user_data)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API int usbmuxd_events_unsubscribe(usbmuxd_subscription_context_t context)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API int usbmuxd_get_device_list(usbmuxd_device_info_t **device_list)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API int usbmuxd_device_list_free(usbmuxd_device_info_t **device_list)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API int usbmuxd_subscribe(usbmuxd_event_cb_t callback, void *user_data)
 {
-    abort();
+    //DEBUG_PRINT("unimpl"); abort();
+    return 0;
 }
 
 USBMUXD_API int usbmuxd_unsubscribe(void)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API int usbmuxd_connect(const uint32_t handle, const unsigned short port)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API int usbmuxd_disconnect(int sfd)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API int usbmuxd_send(int sfd, const char *data, uint32_t len, uint32_t *sent_bytes)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API int usbmuxd_recv_timeout(int sfd, char *data, uint32_t len, uint32_t *recv_bytes, unsigned int timeout)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API int usbmuxd_recv(int sfd, char *data, uint32_t len, uint32_t *recv_bytes)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API int usbmuxd_save_pair_record_with_device_id(const char* record_id, uint32_t device_id, const char *record_data, uint32_t record_size)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API int usbmuxd_save_pair_record(const char* record_id, const char *record_data, uint32_t record_size)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API int usbmuxd_delete_pair_record(const char* record_id)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API void libusbmuxd_set_use_inotify(int set)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
 USBMUXD_API void libusbmuxd_set_debug_level(int level)
 {
-    abort();
+    DEBUG_PRINT("unimpl"); abort();
 }
 
