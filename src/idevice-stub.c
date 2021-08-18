@@ -17,18 +17,27 @@ static int add_upnp_redir(const char *addr, int port, int *retPort) {
     char *lease = "600";
     char iport[6] = {0};
     sprintf(iport, "%d", port);
-    char reservedPort[6];
-    int r = UPNP_AddAnyPortMapping(upnpUrls->controlURL, upnpData->first.servicetype,
-                    "0", iport, addr, description,
-                    proto, NULL, lease, reservedPort);
-    if(r==UPNPCOMMAND_SUCCESS) {
-        *retPort = atoi(reservedPort);
-    } else {
-        printf("AddAnyPortMapping failed with code %d (%s)\n",
-                r, strupnperror(r));
-        return 0;
+    int minport = 16384;
+    int maxport = 65536;
+    
+    for (int i = 0; i < 5; i++) {
+        int curport = rand() % (maxport - minport) + minport;
+        char eport[6] = {0};
+        sprintf(eport, "%d", curport);
+        int r = UPNP_AddPortMapping(upnpUrls->controlURL, upnpData->first.servicetype,
+                    eport, iport, addr, description,
+                    proto, NULL, lease);
+        if(r==UPNPCOMMAND_SUCCESS) {
+            *retPort = curport;
+            goto good;
+        } else {
+            printf("AddAnyPortMapping failed with code %d (%s), retrying...\n",
+                    r, strupnperror(r));
+            continue;
+        }
     }
-
+    return 0;
+    good:
 	return 1;
 }
 
@@ -47,7 +56,7 @@ LIBIMOBILEDEVICE_API idevice_error_t idevice_connect(idevice_t device, uint16_t 
         saddr->sin_family = AF_INET;
         inet_aton(upnpExternalAddr, &saddr->sin_addr);
 
-		int sfd = socket_connect_addr(saddr, redirPort);
+		int sfd = socket_connect_addr((struct sockaddr *)saddr, redirPort);
 		if (sfd < 0) {
 			debug_info("ERROR: Connecting to network device failed: %d (%s)", errno, strerror(errno));
 			return IDEVICE_E_NO_DEVICE;

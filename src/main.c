@@ -76,6 +76,7 @@ int initUPnP() {
 }
 
 int main(int argc, char *argv[]) {
+    srand(time(NULL));
     DEBUG_PRINT("Setup pairInfo...");
     strcpy(pairUDID, argv[1]);
     strcpy(pairDeviceAddress, argv[2]);
