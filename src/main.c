@@ -78,6 +78,8 @@ int initUPnP() {
     return 1;
 }
 
+int tool_main(int argc, char *argv[]);
+
 int main(int argc, char *argv[]) {
     setvbuf(stdin, NULL, _IONBF, 0); 
     setvbuf(stdout, NULL, _IONBF, 0); 
@@ -115,7 +117,11 @@ int main(int argc, char *argv[]) {
     idevice_set_debug_level(0);
 
     pthread_t thHeartbeat;
-    pthread_create(&thHeartbeat, NULL, (void * (*)(void *))heartbeat_thread, hbclient);
+    //pthread_create(&thHeartbeat, NULL, (void * (*)(void *))heartbeat_thread, hbclient);
+    int ret = fork();
+    if (ret == 0) {
+        heartbeat_thread(hbclient);
+    }
 
     DEBUG_PRINT("Start tool...");
     tool_main(argc - 3, argv + 3);
