@@ -1,0 +1,12 @@
+#define lockdownd_client_new_with_handshake wrap_lockdownd_client_new_with_handshake
+#include "../libraries/libimobiledevice/src/lockdown.c"
+#undef lockdownd_client_new_with_handshake
+
+LIBIMOBILEDEVICE_API lockdownd_error_t lockdownd_client_new_with_handshake(idevice_t device, lockdownd_client_t *client, const char *label) {
+    lockdownd_error_t ret = wrap_lockdownd_client_new_with_handshake(device, client, label);
+    if (ret == LOCKDOWN_E_SUCCESS) {
+        //DEBUG_PRINT("Start hb...");
+    }
+    
+    return ret;
+}

@@ -1,6 +1,7 @@
-#include "libusbmuxd-stub.h"
+#include "common.h"
 #include <unistd.h>
 #include <pthread.h>
+#include <string.h>
 
 #include <libimobiledevice/libimobiledevice.h>
 #include <libimobiledevice/debugserver.h>
@@ -12,25 +13,6 @@
 #include <libimobiledevice/service.h>
 #include "common/userpref.h"
 #include "common/utils.h"
-
-idevice_t g_device = NULL;
-
-#define main tool_main
-#define idevice_new_with_options wrap_idevice_new_with_options
-idevice_error_t wrap_idevice_new_with_options(idevice_t *device, const char *udid, enum idevice_options options) {
-    *device = g_device;
-    return IDEVICE_E_SUCCESS;
-}
-#define PACKAGE_NAME "-"
-#define PACKAGE_VERSION "-"
-#define PACKAGE_URL "-"
-#define PACKAGE_BUGREPORT "-"
-// #include <../libraries/libimobiledevice/tools/ideviceinfo.c>
-#include <../libraries/ideviceinstaller/src/ideviceinstaller.c>
-#undef main
-#undef idevice_new_with_options
-#undef lockdownd_client_new_with_handshake
-
 
 #ifndef TOOL_NAME
 #define TOOL_NAME "jitterbug1"
@@ -55,13 +37,43 @@ static void heartbeat_thread(heartbeat_client_t client) {
 }
 
 
-lockdownd_client_t g_lockdown = NULL;
+#include "miniwget.h"
+#include "miniupnpc.h"
+#include "upnpcommands.h"
+#include "portlistingparse.h"
+#include "upnperrors.h"
+struct UPNPUrls _upnpUrls = { 0 };
+struct IGDdatas _upnpData = { 0 };
+char upnpExternalAddr[40] = { 0 };
+int initUPnP() {
+	int error = 0;
+    char lanaddr[64] = "unset";
+    struct UPNPDev *devlist = upnpDiscover(2000, NULL, "", 0, 0, 2, &error);
+    int upnpRet = UPNP_GetValidIGD(devlist, &_upnpUrls, &_upnpData, lanaddr, sizeof(lanaddr));
+    upnpUrls = &_upnpUrls;
+    upnpData = &_upnpData;
+    if (upnpRet == 1) {
+        DEBUG_PRINT("Got good upnp igd: %s", _upnpUrls.controlURL);
+    } else if (upnpRet == 2) {
+        DEBUG_PRINT("Got not-connected igd: %s", _upnpUrls.controlURL);
+    } else {
+        DEBUG_PRINT("Found unknown upnp dev: %s", _upnpUrls.controlURL);
+    }
+    if (upnpRet != 1) {
+        return 0;
+    }
 
-// #define lockdownd_client_new_with_handshake wrap_lockdownd_client_new_with_handshake
-// lockdownd_error_t wrap_lockdownd_client_new_with_handshake(idevice_t device, lockdownd_client_t *client, const char *label) {
-//     *client = g_lockdown;
-//     return LOCKDOWN_E_SUCCESS;
-// }
+    char externalIPAddress[40] = { 0 };
+    int r = UPNP_GetExternalIPAddress(upnpUrls->controlURL,
+	                          upnpData->first.servicetype,
+							  externalIPAddress);
+    if(r != UPNPCOMMAND_SUCCESS) {
+		DEBUG_PRINT("GetExternalIPAddress failed. (errorcode=%d)\n", r);
+        return 0;
+    }
+    DEBUG_PRINT("Got ExternalIPAddress = %s\n", externalIPAddress);
+    return 1;
+}
 
 int main(int argc, char *argv[]) {
     DEBUG_PRINT("Setup pairInfo...");
@@ -72,7 +84,13 @@ int main(int argc, char *argv[]) {
     pairDataLen = ftell(f);
     fseek(f, 0, SEEK_SET);
     fread(pairData, 1, pairDataLen, f);
-
+    
+    if (!initUPnP()) {
+        DEBUG_PRINT("failed to init upnp! exitting...");
+        return 1;
+    }
+    DEBUG_PRINT("upnp init successfully!");
+    
     DEBUG_PRINT("Connect device...");
     idevice_error_t derr = IDEVICE_E_SUCCESS;
     lockdownd_error_t lerr = LOCKDOWN_E_SUCCESS;
@@ -80,12 +98,7 @@ int main(int argc, char *argv[]) {
         DEBUG_PRINT("Failed to create device: %d", derr);
         return 1;
     }
-    
-    if ((lerr = lockdownd_client_new_with_handshake(g_device, &g_lockdown, TOOL_NAME)) != LOCKDOWN_E_SUCCESS) {
-        DEBUG_PRINT("Failed to communicate with device: %d", lerr);
-        return 1;
-    }
-    
+
     DEBUG_PRINT("Start hb...");
     heartbeat_client_t hbclient;
     heartbeat_error_t err = HEARTBEAT_E_UNKNOWN_ERROR;

@@ -10,3 +10,6 @@
 [submodule "libraries/ideviceinstaller"]
 	path = libraries/ideviceinstaller
 	url = https://github.com/libimobiledevice/ideviceinstaller.git
+[submodule "libraries/miniupnpc"]
+	path = libraries/miniupnpc
+	url = https://github.com/NyaMisty/minimalupnpc

@@ -35,7 +35,7 @@
 //#include "CacheStorage.h"
 //#include "Jitterbug.h"
 
-#include "libusbmuxd-stub.h"
+#include "common.h"
 
 char pairUDID[256] = { 0 };
 char pairDeviceAddress[256] = { 0 };
@@ -129,12 +129,14 @@ USBMUXD_API int usbmuxd_device_list_free(usbmuxd_device_info_t **device_list)
 USBMUXD_API int usbmuxd_subscribe(usbmuxd_event_cb_t callback, void *user_data)
 {
     //DEBUG_PRINT("unimpl"); abort();
+    DEBUG_PRINT("usbmuxd_subscribe ignored");
     return 0;
 }
 
 USBMUXD_API int usbmuxd_unsubscribe(void)
 {
-    DEBUG_PRINT("unimpl"); abort();
+    DEBUG_PRINT("usbmuxd_unsubscribe ignored");
+    abort();
 }
 
 USBMUXD_API int usbmuxd_connect(const uint32_t handle, const unsigned short port)

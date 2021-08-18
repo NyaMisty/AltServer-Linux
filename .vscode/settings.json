@@ -5,6 +5,8 @@
         "heartbeat.h": "c",
         "sbservices.h": "c",
         "utils.h": "c",
-        "userpref.h": "c"
+        "userpref.h": "c",
+        "common.h": "c",
+        "xutility": "c"
     }
 }
