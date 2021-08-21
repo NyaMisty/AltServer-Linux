@@ -35,14 +35,13 @@
 //#include "CacheStorage.h"
 //#include "Jitterbug.h"
 
-#include "common.h"
+#include "../common.h"
+#include "global.h"
 
 char pairUDID[256] = { 0 };
 char pairDeviceAddress[256] = { 0 };
 char pairData[16384] = { 0 };
 uint32_t pairDataLen = 0;
-
-
 
 #pragma mark - Device listing
 

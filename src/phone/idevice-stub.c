@@ -1,4 +1,6 @@
-#include "common.h"
+#include "../common.h"
+#include "global.h"
+
 #define idevice_connect wrap_idevice_connect
 #include "../libraries/libimobiledevice/src/idevice.c"
 #undef idevice_connect

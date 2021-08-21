@@ -1,14 +1,9 @@
+#pragma once
+
 #include <stdint.h>
-#include <libimobiledevice/libimobiledevice.h>
 
-char pairUDID[256];
-char pairDeviceAddress[256];
-char pairData[16384];
-uint32_t pairDataLen;
-
-struct UPNPUrls *upnpUrls;
-struct IGDdatas *upnpData;
-char upnpExternalAddr[40];
+typedef int HWND;
+typedef int HINSTANCE;
 
 #define DEBUG_PRINT(...) do { \
         fprintf(stderr, "[%s:%d] ", __FUNCTION__, __LINE__); \
@@ -16,4 +11,19 @@ char upnpExternalAddr[40];
         fprintf(stderr, "\n"); \
     } while (0)
 
-idevice_t g_device;
+#include <stdlib.h>
+#include <unistd.h>
+
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#define closesocket close
+typedef struct timeval TIMEVAL;
+typedef int BOOL;
+
+#ifndef odslog
+#define odslog(msg) { std::cout << msg << std::endl; }
+#endif
+
+
+#define OutputDebugStringW(x) (std::wcout << x)
+#define OutputDebugStringA(x) (std::cout << x)

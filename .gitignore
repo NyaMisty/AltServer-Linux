@@ -1,2 +1,6 @@
 *.o
-/test
+*.a
+/AltServer
+
+.vscode/**
+.ccls-cache/**

@@ -13,3 +13,6 @@
 [submodule "libraries/miniupnpc"]
 	path = libraries/miniupnpc
 	url = https://github.com/NyaMisty/minimalupnpc
+[submodule "libraries/AltSign"]
+	path = libraries/AltSign
+	url = https://github.com/NyaMisty/AltSign-Linux
