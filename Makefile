@@ -1,4 +1,13 @@
-PROGRAM := AltServer
+ifdef NO_USBMUXD_STUB
+	PROGRAM := AltServer
+else
+	ifdef NO_UPNP_STUB
+		PROGRAM := AltServerNet
+	else
+		PROGRAM := AltServerUPnP
+	endif
+endif
+
 
 %.c.o : %.c
 	$(CC) $(CFLAGS) $(EXTRA_FLAGS) -o $@ -c $<

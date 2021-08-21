@@ -69,10 +69,10 @@ std::vector<unsigned char> readFile(const char* filename)
 }
 
 #include <boost/asio.hpp>
+#include <boost/asio/steady_timer.hpp>
 
 boost::asio::io_service io_service;
-boost::posix_time::seconds interval(15); // 1 second
-std::shared_ptr<boost::asio::deadline_timer> timer;
+std::shared_ptr<boost::asio::steady_timer> timer;
 void *hbclient;
 
 void heartbeat_tick(const boost::system::error_code& /*e*/) {
@@ -81,19 +81,25 @@ void heartbeat_tick(const boost::system::error_code& /*e*/) {
 	if (!intervalSec) {
 		return;
 	}
-	interval = boost::posix_time::seconds(intervalSec);
 	// Reschedule the timer for 1 second in the future:
-    timer->expires_at(timer->expires_at() + interval);
+    //timer->expires_from_now(boost::posix_time::seconds(4));
     // Posts the timer event
-    timer->async_wait(heartbeat_tick);
+    //timer->async_wait(heartbeat_tick);
+
+	auto &ioService = crossplat::threadpool::shared_instance().service();
+	boost::asio::steady_timer t(ioService, std::chrono::seconds(4)); 
+	t.async_wait(heartbeat_tick);
 }
 
 int setupHeartbeatTimer() {
 	auto &ioService = crossplat::threadpool::shared_instance().service();
 
-    timer = std::make_shared<boost::asio::deadline_timer>(ioService);
-    timer->expires_from_now(boost::posix_time::seconds(1));
-    timer->async_wait(heartbeat_tick);
+    // timer = std::make_shared<boost::asio::steady_timer>(ioService);
+    // timer->expires_from_now(boost::posix_time::seconds(1));
+    // timer->async_wait(heartbeat_tick);
+	
+	boost::system::error_code err;
+	heartbeat_tick(err);
 	return 1;
 }
 

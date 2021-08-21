@@ -1,6 +1,8 @@
 *.o
 *.a
 /AltServer
+/AltServerNet
+/AltServerUPnP
 
 .vscode/**
 .ccls-cache/**
