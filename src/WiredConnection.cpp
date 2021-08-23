@@ -22,7 +22,9 @@ void WiredConnection::Disconnect()
 
 pplx::task<void> WiredConnection::SendData(std::vector<unsigned char>& data)
 {
-	return pplx::create_task([&data, this]() {
+	std::vector<unsigned char> data_ = data;
+	return pplx::create_task([data_, this]() {
+		std::vector<unsigned char> data = data_;
 		while (data.size() > 0)
 		{
 			uint32_t sentBytes = 0;
