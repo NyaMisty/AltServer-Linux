@@ -114,6 +114,7 @@ int main(int argc, char *argv[]) {
           {"appleID",	required_argument,      0, 'a'},
           {"password",	required_argument,      0, 'p'},
 		  {"pairData",	required_argument,      0, 'P'},
+		  {"debug",		no_argument,      		0, 'd'},
           {0, 0, 0, 0}
         };
 	
@@ -123,13 +124,14 @@ int main(int argc, char *argv[]) {
 	char *password;
 	char *pairDataFile;
 	
-	char *ipaPath;
+	char *ipaPath = NULL;
+	bool debugLog = false;
 
 	while (1) {
 		int this_option_optind = optind ? optind : 1;
 		int option_index = 0;
 
-		int c = getopt_long (argc, argv, "u:i:a:p:P:",
+		int c = getopt_long (argc, argv, "u:i:a:p:P:d",
 						long_options, &option_index);
 		if (c == -1) break;
 
@@ -148,14 +150,18 @@ int main(int argc, char *argv[]) {
 		case 'P':
             pairDataFile = optarg;
 			break;
-
+		case 'd':
+			debugLog = true;
+			break;
        	default:
             printf("?? getopt returned character code 0%o ??\n", c);
     	}
 	}
 
+	bool installApp = ipaPath;
 	if (optind == argc) {
-        printf("Please supply an IPA to install\n");
+		printf("Not supplying ipa, running in server mode!\n");
+        installApp = false;
     } else if (optind + 1 == argc) {
 		ipaPath = argv[optind];
 	} else {
@@ -163,6 +169,7 @@ int main(int argc, char *argv[]) {
  		while (optind < argc)
             printf("%s ", argv[optind++]);
         printf("\n");
+		return 1;
 	}
 
 	setvbuf(stdin, NULL, _IONBF, 0); 
@@ -170,6 +177,11 @@ int main(int argc, char *argv[]) {
     setvbuf(stderr, NULL, _IONBF, 0); 
 	
 	srand(time(NULL));
+
+	if (debugLog) {
+		idevice_set_debug_level(1);
+	}
+
     
 #ifndef NO_USBMUXD_STUB
     setupPairInfo(udid, ipaddr, pairDataFile);
@@ -201,7 +213,6 @@ int main(int argc, char *argv[]) {
 
 	signal(SIGPIPE, SIG_IGN);
 
-	bool installApp = true;
 	if (installApp) {
 		odslog("Installing app...");
 		std::shared_ptr<Device> _selectedDevice = std::make_shared<Device>("unknown", udid, Device::Type::All);;

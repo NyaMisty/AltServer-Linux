@@ -707,7 +707,7 @@ pplx::task<std::shared_ptr<WiredConnection>> DeviceManager::StartWiredConnection
 			throw ServerError(ServerErrorCode::ConnectionFailed);
 		}
 
-		idevice_free(device);
+		// idevice_free(device);
 
 		auto wiredConnection = std::make_shared<WiredConnection>(altDevice, connection);
 		return wiredConnection;
