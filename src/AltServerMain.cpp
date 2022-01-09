@@ -158,7 +158,7 @@ int main(int argc, char *argv[]) {
     	}
 	}
 
-	bool installApp = ipaPath;
+	bool installApp = true;
 	if (optind == argc) {
 		printf("Not supplying ipa, running in server mode!\n");
         installApp = false;
