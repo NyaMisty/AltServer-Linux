@@ -9,13 +9,26 @@ else
 endif
 
 
+ARCH := $(shell gcc -dumpmachine | cut -d- -f 1)
+
+PROGRAM := $(PROGRAM)-$(ARCH)
+
 %.c.o : %.c
 	$(CC) $(CFLAGS) $(EXTRA_FLAGS) -o $@ -c $<
 
 %.cpp.o : %.cpp
 	$(CXX) $(CXXFLAGS) $(EXTRA_FLAGS) -o $@ -c $<
 
-CFLAGS := -DHAVE_CONFIG_H -DDEBUG -O0 -g -mno-default
+CFLAGS := -DHAVE_CONFIG_H -DDEBUG -O0 -g
+
+ifeq ($(ARCH),i386)
+CFLAGS += -mno-default
+endif
+
+ifeq ($(ARCH),i686)
+CFLAGS += -mno-default
+endif
+
 CXXFLAGS = $(CFLAGS) -std=c++17
 
 main_src := $(wildcard src/*.c) $(wildcard src/*.cpp)
