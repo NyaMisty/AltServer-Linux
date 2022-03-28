@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        builder: [ghcr.io/nyamisty/altserver_builder_alpine_armv7, ghcr.io/nyamisty/altserver_builder_alpine_aarch64, ghcr.io/nyamisty/altserver_builder_alpine_amd64, ghcr.io/nyamisty/altserver_builder_alpine_i386]
+        builder: [ghcr.io/nyamisty/altserver_alpine_armv7, ghcr.io/nyamisty/altserver_alpine_aarch64, ghcr.io/nyamisty/altserver_alpine_amd64, ghcr.io/nyamisty/altserver_alpine_i386]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
