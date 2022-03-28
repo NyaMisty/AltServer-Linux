@@ -30,8 +30,10 @@ AltServer for AltStore, but on-device
 
 - Build Configuration 3 (AltServerUPnP): AltServer running on iSH, working through manually specifying IP in a UPnP enabled router
   ```
+ 
   make
   ```
+
 
 - My own build note for you 
   ```
