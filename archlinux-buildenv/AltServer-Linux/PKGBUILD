@@ -1,0 +1,50 @@
+# Maintainer: Zeno Chen <zeno.chen@hotmail.com>
+
+pkgname=AltServer-Linux
+pkgver=0.0.2
+pkgrel=1
+pkgdesc='AltServer for AltStore, but on-device'
+arch=(x86_64)
+url=https://github.com/NyaMisty/AltServer-Linux
+license=(GPL3)
+depends=()
+makedepends=(
+  git
+  unzip
+  clang boost websocketpp python-cryptography
+  cpprestsdk crypto++-static libzip-static openssl-static
+)
+
+_tag=9a33a7981a011a7a8d82686ed6123cefb2e319fc
+source=(git+https://github.com/NyaMisty/AltServer-Linux.git#tag=${_tag})
+sha256sums=(SKIP)
+
+_target='NO_USBMUXD_STUB=1 NO_UPNP_STUB=1'
+pkgver() {
+  cd ${pkgname}
+  git describe --tags | sed 's/-.*$//g; s/v//g'
+}
+
+prepare() {
+  cd ${pkgname}
+  git submodule init
+  #git config submodule.mysubmodule.url "$srcdir/mysubmodule"
+  git submodule update
+  sed -i 's/.\/AltServerData/\/var\/AltServerData/g' src/AltServerApp.cpp
+}
+
+build() {
+  cd ${pkgname}
+  make ${_target}
+}
+
+package() {
+  cd ${pkgname}
+  # create the data for altserver
+  mkdir -p "$pkgdir/usr/bin/"
+  # create the execute for alterserver
+  mkdir -p "$pkgdir/var/AltServerData"
+  install -Dm0755 "${srcdir}/${pkgname}/AltServer-x86_64" "$pkgdir/usr/bin/AltServer"
+}
+
+# vim: ts=2 sw=2 et:

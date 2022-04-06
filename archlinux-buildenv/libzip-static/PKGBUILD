@@ -1,0 +1,36 @@
+# Maintainer: Zeno Chen <zeno.chen@hotmail.com>
+pkgname=libzip-static
+pkgver=1.8.0
+pkgrel=1
+pkgdesc="A C library for reading, creating, and modifying zip archives"
+url="https://libzip.org"
+license=('BSD')
+arch=('x86_64')
+depends=('zlib' 'bzip2' 'zstd' 'openssl' 'gnutls' 'libzip')
+makedepends=('cmake')
+provides=('libzip.a')
+source=("${url}/download/libzip-${pkgver}.tar.xz")
+sha256sums=('f0763bda24ba947e80430be787c4b068d8b6aa6027a26a19923f0acfa3dac97e')
+
+build() {
+  cd "libzip-${pkgver}"
+
+  mkdir build && cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DBUILD_SHARED_LIBS=OFF \
+    ..
+  make
+}
+
+package() {
+  cd "libzip-${pkgver}"/build
+
+  make DESTDIR="${pkgdir}" install
+
+  rm -rf "${pkgdir}"/usr/{include,bin,share}  
+
+  rm -rf "${pkgdir}/usr/lib/cmake"     
+
+  rm -rf "${pkgdir}/usr/lib/pkgconfig"
+}

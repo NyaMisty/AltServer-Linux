@@ -1,0 +1,39 @@
+# Maintainer: Zeno Chen <zeno.chen@hotmail.com>
+pkgname=crypto++-static
+pkgver=8.6.0
+pkgrel=1
+pkgdesc='A free C++ class library of cryptographic schemes'
+arch=(x86_64)
+url=https://www.cryptopp.com/
+license=(custom)
+depends=(gcc-libs)
+makedepends=(
+  git
+  unzip
+  crypto++
+)
+
+_tag=69bf6b53052b59ccb57ce068ce741988ae087317
+source=(git+https://github.com/weidai11/cryptopp.git#tag=${_tag})
+sha256sums=(SKIP)
+
+pkgver() {
+  cd cryptopp
+  git describe --tags | sed 's/^CRYPTOPP_//; s/_/./g'
+}
+
+build() {
+  export CXXFLAGS="$CXXFLAGS -DNDEBUG -fPIC"
+  make PREFIX=/usr -C cryptopp static
+}
+
+#check() {
+#  make PREFIX=/usr -C cryptopp test
+#}
+
+package() {
+  make DESTDIR="${pkgdir}" PREFIX=/usr -C cryptopp install
+  rm -rf "${pkgdir}"/usr/{include,bin,share}
+}
+
+# vim: ts=2 sw=2 et:
