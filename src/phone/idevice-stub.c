@@ -5,11 +5,11 @@
 #include "../libraries/libimobiledevice/src/idevice.c"
 #undef idevice_connect
 
-#include "miniwget.h"
-#include "miniupnpc.h"
-#include "upnpcommands.h"
-#include "portlistingparse.h"
-#include "upnperrors.h"
+#include "miniupnpc/miniwget.h"
+#include "miniupnpc/miniupnpc.h"
+#include "miniupnpc/upnpcommands.h"
+#include "miniupnpc/portlistingparse.h"
+#include "miniupnpc/upnperrors.h"
 #include <stdlib.h>
 #include <arpa/inet.h>
 

@@ -28,6 +28,11 @@
 #include <pplx/threadpool.h>
 
 #include <uuid/uuid.h>
+
+#ifndef UUID_STR_LEN
+#define UUID_STR_LEN 37
+#endif
+
 std::string make_uuid() {
     uuid_t b;
 	char out[UUID_STR_LEN] = {0};
@@ -68,6 +73,7 @@ std::vector<unsigned char> readFile(const char* filename)
 	return vec;
 }
 
+#ifndef NO_USBMUXD_STUB
 #include <boost/asio.hpp>
 #include <boost/asio/steady_timer.hpp>
 
@@ -102,6 +108,7 @@ int setupHeartbeatTimer() {
 	heartbeat_tick(err);
 	return 1;
 }
+#endif
 
 #define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
 #include <boost/stacktrace.hpp>

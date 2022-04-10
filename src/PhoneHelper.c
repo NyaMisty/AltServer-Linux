@@ -20,11 +20,12 @@
 #endif
 #include "common.h"
 
-#include "miniwget.h"
-#include "miniupnpc.h"
-#include "upnpcommands.h"
-#include "portlistingparse.h"
-#include "upnperrors.h"
+#include "miniupnpc/miniwget.h"
+#include "miniupnpc/miniupnpc.h"
+#include "miniupnpc/upnpcommands.h"
+#include "miniupnpc/portlistingparse.h"
+#include "miniupnpc/upnperrors.h"
+
 struct UPNPUrls _upnpUrls = { 0 };
 struct IGDdatas _upnpData = { 0 };
 char upnpExternalAddr[40] = { 0 };
