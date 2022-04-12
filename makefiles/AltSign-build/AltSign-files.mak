@@ -1,0 +1,1 @@
+altsign_include := -I$(BUILD_DIR)/AltSign_patched

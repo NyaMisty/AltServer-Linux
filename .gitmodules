@@ -1,0 +1,17 @@
+[submodule "AltServer-Windows"]
+	path = upstream_repo
+	url = https://github.com/rileytestut/AltServer-Windows
+	branch = develop
+[submodule "libraries/libplist"]
+	path = libraries/libplist
+	url = https://github.com/libimobiledevice/libplist
+	branch = master
+[submodule "libraries/libusbmuxd"]
+	path = libraries/libusbmuxd
+	url = https://github.com/libimobiledevice/libusbmuxd
+[submodule "libraries/libimobiledevice"]
+	path = libraries/libimobiledevice
+	url = https://github.com/libimobiledevice/libimobiledevice
+[submodule "libraries/ideviceinstaller"]
+	path = libraries/ideviceinstaller
+	url = https://github.com/libimobiledevice/ideviceinstaller
