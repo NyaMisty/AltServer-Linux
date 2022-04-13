@@ -16,4 +16,6 @@ content = content.replace(b'boost::filesystem', b'std::filesystem')
 content = content.replace(b'"%FT%T%z"', b'"%Y-%m-%dT%H:%M:%SZ"')
 content = content.replace(b'localtime(', b'gmtime(')
 
+content = content.replace(b'winsock2.h', b'WinSock2.h')
+
 sys.stdout.buffer.write(content)
