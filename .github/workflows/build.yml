@@ -34,7 +34,8 @@ jobs:
           image=${{ matrix.builder }}
           docker pull $image
           docker run -v ${PWD}:/workdir -w /workdir $image bash -c 'mkdir build; cd build; make -f ../Makefile -j3'
-          mv build/AltServer-* /tmp/build_output
+          cp build/AltServer-* /tmp/build_output; chmod +x /tmp/build_output/*
+          sudo rm -rf build
           git clean -fdX
       - name: Upload to github artifact
         uses: NyaMisty/upload-artifact-as-is@master
