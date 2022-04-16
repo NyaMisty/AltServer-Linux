@@ -110,14 +110,32 @@ int setupHeartbeatTimer() {
 #define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
 #include <boost/stacktrace.hpp>
 
+#include <usbmuxd.h>
+
+void print_help() {
+	printf("Usage:  AltServer-Linux options [ ipa-file ]\n");
+	printf(
+			"  -h  --help             Display this usage information.\n"
+			"  -u  --udid UDID        Device's UDID, only needed when installing IPA.\n"
+			"  -a  --appleID AppleID  Apple ID to sign the ipa, only needed when installing IPA.\n"
+			"  -p  --password passwd  Password of Apple ID, only needed when installing IPA.\n"
+			"  -d  --debug            Print debug output, can be used several times to increase debug level.\n"
+			"\n"
+			"The following environment var can be set for some special situation:\n"
+			"  - ALTSERVER_ANISETTE_SERVER: Set to custom anisette server URL\n"
+			"          if not set, the default one: https://armconverter.com/anisette/irGb3Quww8zrhgqnzmrx, is used\n"
+			"  - ALTSERVER_NO_SUBSCRIBE: Please enable this for netmuxd / usbmuxd2, because they do not correctly usbmuxd_listen interfaces\n"
+			);
+}
+
 int main(int argc, char *argv[]) {
 	static struct option long_options[] =
         {
           {"udid",		required_argument,   	0, 'u'},
-          {"ipaddr",	required_argument,		0, 'i'},
           {"appleID",	required_argument,      0, 'a'},
           {"password",	required_argument,      0, 'p'},
-		  {"pairData",	required_argument,      0, 'P'},
+          //{"ipaddr",	required_argument,		0, 'i'},
+		  //{"pairData",	required_argument,      0, 'P'},
 		  {"debug",		no_argument,      		0, 'd'},
           {0, 0, 0, 0}
         };
@@ -129,7 +147,7 @@ int main(int argc, char *argv[]) {
 	char *pairDataFile;
 	
 	char *ipaPath = NULL;
-	bool debugLog = false;
+	int debugLogLevel = 0;
 
 	while (1) {
 		int this_option_optind = optind ? optind : 1;
@@ -155,11 +173,21 @@ int main(int argc, char *argv[]) {
             pairDataFile = optarg;
 			break;
 		case 'd':
-			debugLog = true;
+			//debugLog = true;
+			debugLogLevel++;
 			break;
-       	default:
+		case 'h':
+			print_help();
+			exit(0);
+		default:
             printf("?? getopt returned character code 0%o ??\n", c);
+			print_help();
+			exit(1);
     	}
+	}
+
+	if (argc == 1) {
+		printf("No argument supplied, if you want for help, please use -h or --help\n");
 	}
 
 	bool installApp = true;
@@ -182,10 +210,10 @@ int main(int argc, char *argv[]) {
 	
 	srand(time(NULL));
 
-	if (debugLog) {
-		idevice_set_debug_level(1);
+	if (debugLogLevel) {
+		idevice_set_debug_level(debugLogLevel);
+		libusbmuxd_set_debug_level(debugLogLevel - 2);
 	}
-
     
 #ifndef NO_USBMUXD_STUB
     setupPairInfo(udid, ipaddr, pairDataFile);

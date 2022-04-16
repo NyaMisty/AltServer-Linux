@@ -2062,7 +2062,12 @@ fs::path AltServerApp::developerDisksDirectoryPath() const
 void AltServerApp::Start(HWND windowHandle, HINSTANCE instanceHandle)
 {
 	ConnectionManager::instance()->Start();
-	DeviceManager::instance()->Start();
+
+	// DeviceManager only needs 
+	const char *isNoUSB = getenv("ALTSERVER_NO_SUBSCRIBE");
+	if (!isNoUSB) {
+		DeviceManager::instance()->Start();
+	}
 }
 
 void AltServerApp::Stop()
