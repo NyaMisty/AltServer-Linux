@@ -15,3 +15,6 @@
 [submodule "libraries/ideviceinstaller"]
 	path = libraries/ideviceinstaller
 	url = https://github.com/libimobiledevice/ideviceinstaller
+[submodule "libraries/libimobiledevice-glue"]
+	path = libraries/libimobiledevice-glue
+	url = https://github.com/libimobiledevice/libimobiledevice-glue
