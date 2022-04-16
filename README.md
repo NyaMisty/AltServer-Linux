@@ -5,18 +5,32 @@ AltServer for AltStore, but on-device
 
 - Install IPA: `./AltServer -u [UDID] -a [AppleID account] -p [AppleID password] [ipaPath.ipa]`
 - Running as AltServer Daemon: `./AltServer`
+- Full usage (maybe outdated, refer to `./AltServer -h` for the newest):
+```
+Usage:  AltServer-Linux options [ ipa-file ]
+  -h  --help             Display this usage information.
+  -u  --udid UDID        Device's UDID, only needed when installing IPA.
+  -a  --appleID AppleID  Apple ID to sign the ipa, only needed when installing IPA.
+  -p  --password passwd  Password of Apple ID, only needed when installing IPA.
+  -d  --debug            Print debug output, can be used several times to increase debug level.
+
+The following environment var can be set for some special situation:
+  - ALTSERVER_ANISETTE_SERVER: Set to custom anisette server URL
+          if not set, the default one: https://armconverter.com/anisette/irGb3Quww8zrhgqnzmrx, is used
+  - ALTSERVER_NO_SUBSCRIBE: Please enable this for netmuxd / usbmuxd2, because they do not correctly usbmuxd_listen interfaces
+```
 
 ## Download
 
-- Precompiled static binary can be downloaded in Release
+- Precompiled static binary can be downloaded in Release ( also have a look at pre-release ;) )
 - Nightly version is available as Github Actions artifacts
 
-## TODO
-- [x] Track upstream (AltServer-Windows) develop branch
-- [ ] Support Offline Anisette Data Generation (i.e. without Sideloadly)
-  - WIP: currently implementing the custom anisette data server
-- [ ] Support Wi-Fi Refresh
-  - Have to wait usbmuxd to support network devices
+## TODO / Special Features
+- [x] Track upstream (AltServer-Windows) develop branch (i.e. Beta version)
+- [x] Support Offline Anisette Data Generation (i.e. without Sideloadly)
+  - Finsihed, please run [alt_anisette_server](https://hub.docker.com/r/nyamisty/alt_anisette_server) & use `ALTSERVER_ANISETTE_SERVER` to specify custom server URL
+- [x] Support Wi-Fi Refresh
+  - [netmuxd](https://github.com/jkcoxson/netmuxd) now supports network devices, but needs a special env var `ALTSERVER_NO_SUBSCRIBE` to allow it work correctly. Enabling this would disable **auto-refresh when plugged-in** of USB devices
 
 ----
 
