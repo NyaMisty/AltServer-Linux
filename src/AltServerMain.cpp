@@ -22,8 +22,6 @@
 
 #include "AltServerApp.h"
 
-//#include "PhoneHelper.h"
-
 #define odslog(msg) { std::stringstream ss; ss << msg << std::endl; OutputDebugStringA(ss.str().c_str()); }
 
 #include <pplx/pplxtasks.h>
@@ -70,43 +68,6 @@ std::vector<unsigned char> readFile(const char* filename)
 	return vec;
 }
 
-#ifndef NO_USBMUXD_STUB
-#include <boost/asio.hpp>
-#include <boost/asio/steady_timer.hpp>
-
-boost::asio::io_service io_service;
-std::shared_ptr<boost::asio::steady_timer> timer;
-void *hbclient;
-
-void heartbeat_tick(const boost::system::error_code& /*e*/) {
-	int intervalSec = do_heartbeat(hbclient);
-    odslog("heartbeat_tick! interval: " << intervalSec);
-	if (!intervalSec) {
-		return;
-	}
-	// Reschedule the timer for 1 second in the future:
-    //timer->expires_from_now(boost::posix_time::seconds(4));
-    // Posts the timer event
-    //timer->async_wait(heartbeat_tick);
-
-	auto &ioService = crossplat::threadpool::shared_instance().service();
-	boost::asio::steady_timer t(ioService, std::chrono::seconds(4)); 
-	t.async_wait(heartbeat_tick);
-}
-
-int setupHeartbeatTimer() {
-	auto &ioService = crossplat::threadpool::shared_instance().service();
-
-    // timer = std::make_shared<boost::asio::steady_timer>(ioService);
-    // timer->expires_from_now(boost::posix_time::seconds(1));
-    // timer->async_wait(heartbeat_tick);
-	
-	boost::system::error_code err;
-	heartbeat_tick(err);
-	return 1;
-}
-#endif
-
 #define BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED
 #include <boost/stacktrace.hpp>
 
@@ -124,7 +85,7 @@ void print_help() {
 			"The following environment var can be set for some special situation:\n"
 			"  - ALTSERVER_ANISETTE_SERVER: Set to custom anisette server URL\n"
 			"          if not set, the default one: https://armconverter.com/anisette/irGb3Quww8zrhgqnzmrx, is used\n"
-			"  - ALTSERVER_NO_SUBSCRIBE: Please enable this for netmuxd / usbmuxd2, because they do not correctly usbmuxd_listen interfaces\n"
+			"  - ALTSERVER_NO_SUBSCRIBE: (*unused*) Please enable this for usbmuxd server that do not correctly usbmuxd_listen interfaces\n"
 			);
 }
 
@@ -215,34 +176,6 @@ int main(int argc, char *argv[]) {
 		libusbmuxd_set_debug_level(debugLogLevel - 2);
 	}
     
-#ifndef NO_USBMUXD_STUB
-    setupPairInfo(udid, ipaddr, pairDataFile);
-
-#ifndef NO_UPNP_STUB
-	if (!initUPnP()) {
-        DEBUG_PRINT("failed to init upnp! exitting...");
-        return 1;
-    }
-    DEBUG_PRINT("upnp init successfully!");    
-#endif
-
-	DEBUG_PRINT("Connect device...");
-	if (!initGlobalDevice()) {
-		DEBUG_PRINT("failed to init device! exitting...");
-		return 1;
-	}
-    if (!initHeartbeat(&hbclient)) {
-		DEBUG_PRINT("failed to init heartbeat! exitting...");
-		return 1;
-	}
-    if (!setupHeartbeatTimer()) {
-        DEBUG_PRINT("failed to init heartbeat! exitting...");
-        return 1;
-    }
-	DEBUG_PRINT("heartbeat init successfully!");    
-
-#endif
-
 	signal(SIGPIPE, SIG_IGN);
 
 	if (installApp) {
