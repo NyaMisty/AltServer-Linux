@@ -5,4 +5,4 @@ SHIM_DIR := $(MAIN_DIR)/shims
 
 CFLAGS += -I$(SHIM_DIR) -include windows_shim.h
 
-shim_src := $(wildcard $(SHIM_DIR)/*.cpp)
+shim_src := $(wildcard $(SHIM_DIR)/*.cpp) $(wildcard $(SHIM_DIR)/*.c)
