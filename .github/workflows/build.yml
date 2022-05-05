@@ -2,12 +2,76 @@ name: Build AltServer
 
 on:
   push:
+  workflow_dispatch:
+    inputs:
+      sync_upstream:
+        required: false
+        default: false
+      debug_enabled:
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'
+        required: false
+        default: false
+  repository_dispatch:
+
+  schedule:
+    - cron: "0 */4 * * *" # min hour day week year
+
 
 env:
   REGISTRY: ghcr.io
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    name: "Check Upstream Updates"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Check If Need Checking
+        id: needCheck
+        if: ${{ github.event_name == 'schedule' || ( github.event_name == 'workflow_dispatch' && github.event.inputs.sync_upstream ) }}
+        run: |
+          echo "needCheck=1" >> $GITHUB_ENV
+
+      - name: Check Upstream Version
+        id: check
+        run: |
+          if [[ "$needCheck" == 1 ]]; then
+            echo "Checking changes in upstream_repo..."
+            
+            current_upstream=$(git ls-tree HEAD upstream_repo | awk '{ print $3 }')
+            echo "Current Upstream Commit: $current_upstream"
+            
+            git submodule update --remote -- upstream_repo
+            new_upstream=$( cd upstream_repo; git show -s --format=%H )
+            echo "New Upstream Commit: $new_upstream"
+            
+            git reset --hard
+            git submodule update --init
+            if [[ "$current_upstream" != "$new_upstream" ]]; then
+              echo "Upstream got new commits, go updating!"
+              echo "::set-output name=updated::1"
+            else
+              echo "Upstream no change~"
+              echo "::set-output name=updated::0"
+            fi
+          else
+            echo "Needn't to check changes, directly return~"
+            echo "::set-output name=updated::0"
+          fi
+
+      - uses: gautamkrishnar/keepalive-workflow@master
+        with:
+          commit_message: "[proj] keepalive-workflow auto commit"
+    outputs:
+      updated: ${{ steps.check.outputs.updated }}
+
   build:
+    needs: [check]
     strategy:
       matrix:
         builder: [ghcr.io/nyamisty/altserver_builder_alpine_armv7, ghcr.io/nyamisty/altserver_builder_alpine_aarch64, ghcr.io/nyamisty/altserver_builder_alpine_amd64, ghcr.io/nyamisty/altserver_builder_alpine_i386]
@@ -18,6 +82,10 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+      - name: Do Submodule Update
+        if: ${{ needs.check.outputs.updated == '1' }}
+        run:
+          git submodule update --remote -- upstream_repo
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -44,6 +112,7 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
     needs: [build]
     name: "release"
     steps:
@@ -63,9 +132,30 @@ jobs:
         if [ "$(ls -A build_release)" ]; then exit 0; else exit 1; fi
     - name: Release
       uses: softprops/action-gh-release@v1
-      if: ${{ startsWith(github.ref, 'refs/tags/') }}
       with:
         files: build_release/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+  
+  update_submodule:
+    runs-on: ubuntu-latest
+    needs: [check, build]
+    if: ${{ needs.check.outputs.updated == '1' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Commit Submodule Update
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git submodule update --remote -- upstream_repo
+          git commit -m "[server] Sync Upstream Repo commit" upstream_repo
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+        
