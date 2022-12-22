@@ -56,8 +56,8 @@ The following environment var can be set for some special situation:
         docker run --platform=linux/arm/v7 --name altserver-builder-alpine-armv7 -it alpine:3.15 
     2. Install dependencies:
         apk add zsh git curl wget g++ clang boost-static ninja boost-dev cmake make sudo bash vim libressl-dev util-linux-dev zlib-dev zlib-static
-    3. - Install corecrypto
-        download corecrypto from apple website, unzip corecrypto.zip; cd corecrypto;
+    3. Install corecrypto
+       - download corecrypto from apple website, unzip corecrypto.zip; cd corecrypto;
        - vim CMakeLists.txt, delete references to code coverage like include(scripts/code-coverage.cmake), add_code_coverage(), target_code_coverage()
        - mkdir build; cd build; CC=clang CXX=clang++ cmake ..;
        - vim CMakeFiles/Makefile2, delete line starts with "all: corecrypto_perf/....." and "all: corecrypto_test/.....", then make; make install
