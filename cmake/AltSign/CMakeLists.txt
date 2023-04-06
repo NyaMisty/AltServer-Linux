@@ -7,7 +7,7 @@ project(altsign LANGUAGES CXX)
 
 file(GLOB src "${ALTSERVER_DIR}/upstream_patched/AltSign/*.c*")
 
-add_library(${PROJECT_NAME} ${c_src} ${src})
+add_library(${PROJECT_NAME} STATIC ${c_src} ${src})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)

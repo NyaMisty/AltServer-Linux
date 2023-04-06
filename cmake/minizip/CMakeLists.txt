@@ -9,7 +9,7 @@ file(GLOB src "${ALTSERVER_DIR}/upstream_patched/AltSign/Dependencies/minizip/*.
 list(FILTER src EXCLUDE REGEX "win|miniunz|minizip\.c")
 
 
-add_library(${PROJECT_NAME} ${src})
+add_library(${PROJECT_NAME} STATIC ${src})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # --------------------------------------------------------------------------------------------------------

@@ -14,7 +14,7 @@ set_source_files_properties(${c_src} PROPERTIES LANGUAGE C)
 file(GLOB src "${ROOT}/src/*.cpp" "${ROOT}/libcnary/*.cpp")
 set_source_files_properties(${src} PROPERTIES LANGUAGE CXX)
 
-add_library(${PROJECT_NAME} ${c_src} ${src})
+add_library(${PROJECT_NAME} STATIC ${c_src} ${src})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # --------------------------------------------------------------------------------------------------------

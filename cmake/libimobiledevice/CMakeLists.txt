@@ -8,7 +8,7 @@ project(imobiledevice LANGUAGES C)
 set(ROOT "${ALTSERVER_DIR}/libraries/libimobiledevice")
 file(GLOB src "${ROOT}/src/*.c" "${ROOT}/common/*.c")
 
-add_library(${PROJECT_NAME} ${src})
+add_library(${PROJECT_NAME} STATIC ${src})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # --------------------------------------------------------------------------------------------------------

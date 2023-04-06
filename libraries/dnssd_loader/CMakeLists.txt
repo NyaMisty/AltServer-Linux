@@ -5,7 +5,7 @@ project(dnssd LANGUAGES CXX)
 # Setup library                          
 # -------------------------------------------------------------------------------------------------------------------------------
 
-add_library(${PROJECT_NAME} "dnssd_loader.cpp")
+add_library(${PROJECT_NAME} STATIC "dnssd_loader.cpp")
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)

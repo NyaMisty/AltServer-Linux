@@ -8,7 +8,7 @@ project(usbmuxd LANGUAGES C)
 set(ROOT "${ALTSERVER_DIR}/libraries/libusbmuxd")
 
 file(GLOB src "${ROOT}/src/*.c")
-add_library(${PROJECT_NAME} ${src})
+add_library(${PROJECT_NAME} STATIC ${src})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 # --------------------------------------------------------------------------------------------------------

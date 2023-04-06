@@ -8,7 +8,7 @@ project(imobiledevice-glue LANGUAGES C)
 set(ROOT "${ALTSERVER_DIR}/libraries/libimobiledevice-glue")
 file(GLOB src "${ROOT}/src/*.c" "${ROOT}/common/*.c")
 
-add_library(${PROJECT_NAME} ${src})
+add_library(${PROJECT_NAME} STATIC ${src})
 add_library(imobiledevice::glue ALIAS ${PROJECT_NAME})
 
 # --------------------------------------------------------------------------------------------------------
