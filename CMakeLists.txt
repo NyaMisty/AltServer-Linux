@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(altserver-linux VERSION 2.0)
+project(altserver-linux VERSION 0.0.5)
 
 set(ALTSERVER_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
@@ -49,13 +49,12 @@ add_subdirectory(cmake/AltServer)
 # -------------------------------------------------------------------------------------------------------------------------------
 
 if (altserver_cli)
-    add_executable(${PROJECT_NAME})
+    file(GLOB src "src/*.cpp")
+    add_executable(${PROJECT_NAME} ${src})
+
     target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_17)
     set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17 CXX_EXTENSIONS OFF CXX_STANDARD_REQUIRED ON)
     
     add_subdirectory(cmake/libusbmuxd)
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES} uuid usbmuxd::usbmuxd altserver::altserver altsign::altsign)
-
-    file(GLOB src "src/*.cpp")
-    target_sources(${PROJECT_NAME} PRIVATE ${src})
+    target_link_libraries(${PROJECT_NAME} PUBLIC usbmuxd uuid altserver altsign ${Boost_LIBRARIES} )
 endif()
