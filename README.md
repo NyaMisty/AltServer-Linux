@@ -32,6 +32,7 @@ AltServer for AltStore, but on-device
 ## Download
 
 - [Github Release](https://github.com/NyaMisty/AltServer-Linux/releases)
+- [altserver-linux-curve-git <sup>AUR</sup>](https://aur.archlinux.org/packages/altserver-linux-curve-git)
 - Nightly Builds are available as [Workflow Artifacts](https://github.com/NyaMisty/AltServer-Linux/actions)
 
 ---
