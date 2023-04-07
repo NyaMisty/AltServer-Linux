@@ -31,19 +31,25 @@ AltServer for AltStore, but on-device
 
 ## Download
 
-- Precompiled static binary can be downloaded in Release ( also have a look at pre-release ;) )
-- Nightly version is available as Github Actions artifacts
+- [Github Release](https://github.com/NyaMisty/AltServer-Linux/releases)
+- Nightly Builds are available as [Workflow Artifacts](https://github.com/NyaMisty/AltServer-Linux/actions)
 
-## TODO / Special Features
-- [x] Track upstream (AltServer-Windows) develop branch (i.e. Beta version)
-- [x] Support Offline Anisette Data Generation (i.e. without Sideloadly)
-  - Finsihed, please run [alt_anisette_server](https://hub.docker.com/r/nyamisty/alt_anisette_server) & use `ALTSERVER_ANISETTE_SERVER` to specify custom server URL
-- [x] Support Wi-Fi Refresh
-  - [netmuxd](https://github.com/jkcoxson/netmuxd) now supports network devices (needs version > v0.1.1, be sure to check pre-release)
-    - Download `netmuxd`, stop the original `usbmuxd`, and run `netmuxd` before running `AltServer-Linux`
-    - ~If netmuxd does not work, please try using special env var `ALTSERVER_NO_SUBSCRIBE`. Enabling this would disable **auto-refresh when plugged-in** of USB devices~
+---
 
-----
+# Offline Anisette
+
+Offline Anisette Data Generation (i.e. with Sideloadly) is supported.  
+Run [alt_anisette_server](https://hub.docker.com/r/nyamisty/alt_anisette_server) and specify the custom server url through the environment variable `ALTSERVER_ANISETTE_SERVER`.
+
+# Wi-Fi Refresh
+
+[netmuxd](https://github.com/jkcoxson/netmuxd) supports network devices since versions `>0.1.1`.
+
+To use netmuxd stop the original `usbmuxd` and run `netmuxd` before starting altserver.
+
+> ~~If netmuxd does not work, please try using special env var `ALTSERVER_NO_SUBSCRIBE`. Enabling this would disable **auto-refresh when plugged-in** of USB devices~~
+
+---
 
 ## Advanced: Build Instructions
 > If you have issues with building you may want to checkout the build workflow
