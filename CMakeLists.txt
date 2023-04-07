@@ -41,6 +41,14 @@ add_definitions(-include "${ALTSERVER_DIR}/src/common.h" -include "${ALTSERVER_D
 # This is also pretty bad practice imo, but exporting all of the defines into cmake would also be retarded
 add_definitions(-include "${ALTSERVER_DIR}/config/libimobiledevice.h" -include "${ALTSERVER_DIR}/config/dnssd.h")
 
+add_subdirectory(cmake/ldid)
+add_subdirectory(cmake/minizip)
+add_subdirectory(cmake/libplist)
+add_subdirectory(cmake/CoreCrypto)
+add_subdirectory(libraries/dnssd_loader)
+add_subdirectory(cmake/libimobiledevice)
+add_subdirectory(cmake/libimobiledevice-glue)
+
 add_subdirectory(cmake/AltSign)
 add_subdirectory(cmake/AltServer)
 

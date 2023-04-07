@@ -23,3 +23,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17 CXX_EXTENSIONS 
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${ALTSERVER_DIR}/shims")
 target_include_directories(${PROJECT_NAME} PUBLIC "${ALTSERVER_DIR}/upstream_patched/ldid")
+
+# --------------------------------------------------------------------------------------------------------
+# Link required libraries
+# --------------------------------------------------------------------------------------------------------
+
+target_link_libraries(${PROJECT_NAME} PUBLIC plist::plist)

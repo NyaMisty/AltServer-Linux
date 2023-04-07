@@ -21,5 +21,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${ROOT}/include")
 # Link required libraries
 # --------------------------------------------------------------------------------------------------------
 
-add_subdirectory(../libimobiledevice "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}")
 target_link_libraries(${PROJECT_NAME} PUBLIC imobiledevice::imobiledevice)

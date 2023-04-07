@@ -22,12 +22,12 @@ jobs:
           submodules: recursive
 
       - name: Install build dependencies
-        run: "paru --noconfirm -Syu base-devel cmake clang ninja git make boost zlib && aur-install libcorecrypto-git"
+        run: "paru --noconfirm -Syu base-devel cmake clang ninja git make boost zlib python3 avahi && aur-install libcorecrypto-git"
       
       - name: Compile
         run: >
           mkdir build && cd build
-          && cmake .. && cmake --build . --config Release
+          && cmake -GNinja .. && cmake --build . --config Release -- -j 8
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3

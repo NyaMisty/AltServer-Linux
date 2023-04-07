@@ -31,5 +31,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${ALTSERVER_DIR}/upstream_pat
 # Link required libraries
 # --------------------------------------------------------------------------------------------------------
 
-add_subdirectory("${ALTSERVER_DIR}/libraries/dnssd_loader" "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}")
-target_link_libraries(${PROJECT_NAME} PUBLIC dnssd::dnssd altsign::altsign)
+target_link_libraries(${PROJECT_NAME} PUBLIC imobiledevice::imobiledevice dnssd::dnssd altsign::altsign)

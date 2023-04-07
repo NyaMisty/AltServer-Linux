@@ -33,9 +33,4 @@ include(FetchContent)
 FetchContent_Declare(cpprestsdk GIT_REPOSITORY "https://github.com/microsoft/cpprestsdk" GIT_TAG "2.10.18")
 FetchContent_MakeAvailable(cpprestsdk)
 
-add_subdirectory(../ldid "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_ldid")
-add_subdirectory(../minizip "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_minizip")
-add_subdirectory(../libplist "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_libplist")
-add_subdirectory(../CoreCrypto "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_corecrypto")
-
 target_link_libraries(${PROJECT_NAME} PUBLIC plist::plist ldid::ldid minizip::minizip corecrypto::corecrypto cpprest)

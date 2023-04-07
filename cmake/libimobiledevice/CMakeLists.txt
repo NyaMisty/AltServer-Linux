@@ -22,5 +22,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${ROOT}/include" "${ROOT}/com
 # Link required libraries
 # --------------------------------------------------------------------------------------------------------
 
-add_subdirectory(../libimobiledevice-glue "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}")
-target_link_libraries(${PROJECT_NAME} PUBLIC imobiledevice::glue)
+target_link_libraries(${PROJECT_NAME} PUBLIC imobiledevice::glue usbmuxd::usbmuxd)

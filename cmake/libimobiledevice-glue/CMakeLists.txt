@@ -17,3 +17,9 @@ add_library(imobiledevice::glue ALIAS ${PROJECT_NAME})
 
 target_include_directories(${PROJECT_NAME} PRIVATE "${ROOT}")
 target_include_directories(${PROJECT_NAME} PUBLIC "${ROOT}/include")
+
+# --------------------------------------------------------------------------------------------------------
+# Link required libraries
+# --------------------------------------------------------------------------------------------------------
+
+target_link_libraries(${PROJECT_NAME} PUBLIC plist::plist)
