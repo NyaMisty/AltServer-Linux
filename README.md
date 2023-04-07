@@ -53,7 +53,7 @@ AltServer for AltStore, but on-device
 
 - 🚧 Install Build Dependencies
   ```bash
-  yay -S boost clang cmake ninja git libcorecrypto-git zlib
+  yay -S boost clang cmake ninja git libcorecrypto-git zlib python3 avahi
   ```
 
 - 📦 Grab the source
