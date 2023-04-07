@@ -15,7 +15,8 @@ add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 # Include directories
 # --------------------------------------------------------------------------------------------------------
 
-target_include_directories(${PROJECT_NAME} PRIVATE "${ROOT}")
+target_include_directories(${PROJECT_NAME} PUBLIC "${ROOT}")
+target_include_directories(${PROJECT_NAME} PUBLIC "${ALTSERVER_DIR}/libraries")
 target_include_directories(${PROJECT_NAME} PUBLIC "${ROOT}/include" "${ROOT}/common")
 
 # --------------------------------------------------------------------------------------------------------
