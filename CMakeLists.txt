@@ -7,7 +7,7 @@ set(ALTSERVER_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 # Options
 # -------------------------------------------------------------------------------------------------------------------------------
 
-option(altserver_cli "Wether or not to build the cli" ON)
+option(altserver_cli "Whether or not to build the cli" ON)
 
 # -------------------------------------------------------------------------------------------------------------------------------
 # Patch upstream project
