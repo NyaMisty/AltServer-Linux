@@ -27,7 +27,7 @@ jobs:
       - name: Compile
         run: >
           mkdir build && cd build
-          && cmake -GNinja .. && cmake --build . --config Release -- -j 8
+          && cmake -GNinja -DBUILD_SHARED_LIBS=OFF .. && cmake --build . --config Release -- -j 8
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
@@ -35,3 +35,4 @@ jobs:
           name: build
           path: |
             build/
+            !build/_deps
