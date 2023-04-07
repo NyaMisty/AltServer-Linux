@@ -23,4 +23,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${ROOT}/include" "${ROOT}/com
 # Link required libraries
 # --------------------------------------------------------------------------------------------------------
 
-target_link_libraries(${PROJECT_NAME} PUBLIC imobiledevice::glue usbmuxd::usbmuxd)
+find_package(OpenSSL REQUIRED)
+target_link_libraries(${PROJECT_NAME} PUBLIC imobiledevice::glue usbmuxd::usbmuxd OpenSSL::SSL)
