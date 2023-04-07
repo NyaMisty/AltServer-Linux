@@ -35,4 +35,5 @@ jobs:
           name: build
           path: |
             build/
+            !build/cmake
             !build/_deps
