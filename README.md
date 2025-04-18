@@ -45,8 +45,8 @@ The following environment var can be set for some special situation:
 - Build:
   ```
   cd AltServer-Linux
-  mkdir build
-  make -f ../Makefile -j3
+  mkdir build && cd build
+  make -f ../Makefile -j$(nproc)
   ls AltServer-*
   ```
 
