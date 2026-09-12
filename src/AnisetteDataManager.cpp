@@ -13,6 +13,30 @@
 
 #define odslog(msg) { std::stringstream ss; ss << msg << std::endl; OutputDebugStringA(ss.str().c_str()); }
 
+// Since ~2026-09, Apple's GSA edge (gsa.apple.com/grandslam/GsService2) rejects with an
+// immediate HTTP 503 any request whose "X-MMe-Client-Info" header contains the substring
+// "com.apple.dt.Xcode" - independent of version, User-Agent, or connection reuse. This was
+// confirmed here with a direct curl repro (with vs. without the substring: 503 vs 401, i.e.
+// actually reaching the auth service), matching altstoreio/AltStore PR #1790's findings.
+// Our anisette server (ani.sidestore.io) reports a client-info string containing exactly
+// that substring, so we sanitize it once here, at the single point where anisette data
+// enters this program, before it's ever used to build a request header.
+// See: https://github.com/altstoreio/AltStore/pull/1790
+static std::string SanitizeClientInfo(std::string clientInfo)
+{
+	const std::string needle = "com.apple.dt.Xcode";
+	const std::string replacement = "com.apple.akd";
+
+	size_t pos = 0;
+	while ((pos = clientInfo.find(needle, pos)) != std::string::npos)
+	{
+		clientInfo.replace(pos, needle.length(), replacement);
+		pos += replacement.length();
+	}
+
+	return clientInfo;
+}
+
 AnisetteDataManager* AnisetteDataManager::_instance = nullptr;
 
 AnisetteDataManager* AnisetteDataManager::instance()
@@ -133,7 +157,7 @@ std::shared_ptr<AnisetteData> AnisetteDataManager::FetchAnisetteData()
 					std::atoi(jsonVal.at("X-Apple-I-MD-RINFO").as_string().c_str()),
 					jsonVal.at("X-Mme-Device-Id").as_string(),
 					jsonVal.at("X-Apple-I-SRL-NO").as_string(),
-					jsonVal.at("X-MMe-Client-Info").as_string(),
+					SanitizeClientInfo(jsonVal.at("X-MMe-Client-Info").as_string()),
 					tv,
 					jsonVal.at("X-Apple-Locale").as_string(),
 					jsonVal.at("X-Apple-I-TimeZone").as_string());
